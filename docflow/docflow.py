@@ -5,8 +5,12 @@ from docflow.state import State
 from docflow.components import (
     navbar,
     text_box,
+    prompt_bar,
 )
-
+from docflow.style.index_style import (
+    document_style,
+    index_style,
+)
 
 def values() -> rx.Component:
     return rx.container(
@@ -16,12 +20,13 @@ def values() -> rx.Component:
 def index() -> rx.Component:
     return rx.chakra.vstack(
         navbar.navbar(),
-        text_box.text_box(),
-        backgroud_color=rx.color("mauve", 1),
-        color=rx.color("mauve", 11),
-        min_height="100vh",
-        align_items="stretch",
-        spacing="0",
+        rx.center(
+            text_box.text_box(),
+            text_box.formated_box(),
+            style=document_style,
+        ),
+        prompt_bar.prompt_bar(),
+        style=index_style,
     )
 
 app = rx.App(
