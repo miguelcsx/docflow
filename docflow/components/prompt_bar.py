@@ -55,7 +55,8 @@ def prompt_bar() -> rx.Component:
                 ),
                 on_submit=State.process_documentation,
                 reset_on_submit=True,
-            )
+            ),
+            rx.text(State.form_data.to_string())
         ),
         style=prompt_bar_style,
     )

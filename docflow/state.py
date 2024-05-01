@@ -18,8 +18,11 @@ class State(rx.State):
     processing: bool = False
 
     # Documentation output
-    documentation: str = "# Hello World"
+    documentation: str = ""
 
+    settings_data: dict = {}
+
+    form_data: dict = {}
 
     def set_code(self, code: str):
         """Set the code input."""
@@ -33,9 +36,11 @@ class State(rx.State):
         """Set the API token input."""
         self.token = token
 
-    async def process_documentation(self, form_data: dict[str, str]):
-        # code = form_data["code"]
+    def handle_submit(self, form_data: dict):
+        self.settings_data = form_data
 
-        # if code == "":
-        return
+    async def process_documentation(self, form_data: dict[str, str]):
+        form_data["code"] = self.code
+        self.form_data = form_data
+        self.documentation = form_data["code"] + form_data["prompt"]
         

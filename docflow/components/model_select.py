@@ -4,11 +4,6 @@ import reflex as rx
 from docflow.state import State
 from enum import Enum
 
-class ModelSelectState(rx.State):
-    form_data: dict = {}
-
-    def handle_submit(self, form_data: dict):
-        self.form_data = form_data
 
 class Model(Enum):
     ANTHROPIC = "anthropic"
@@ -49,12 +44,12 @@ def model_select() -> rx.Component:
                     type="submit",
                 ),
             ),
-            on_submit=ModelSelectState.handle_submit,
+            on_submit=State.handle_submit,
             reset_on_submit=True,
         ),
         rx.divider(size="4"),
         rx.heading("Results"),
-        rx.text(ModelSelectState.form_data.to_string()),
+        rx.text(State.settings_data.to_string()),
         width="100%",
         direction="column",
         spacing="2",
