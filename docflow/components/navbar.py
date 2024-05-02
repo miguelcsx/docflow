@@ -1,8 +1,11 @@
 # docflow/components/navbar.py
 
 import reflex as rx
-from docflow.state import State
 from docflow.components.model_select import model_select
+from docflow.state import (
+    State,
+    Mode
+)
 from docflow.style.navbar_style import (
     navbar_style,
     sidebar_style,
@@ -27,6 +30,7 @@ def sidebar(trigger) -> rx.Component:
     )
 
 def navbar() -> rx.Component:
+    modes = ["markdown", "docstring"]
     return rx.box(
         rx.hstack(
             rx.hstack(
@@ -37,7 +41,7 @@ def navbar() -> rx.Component:
                             tag="info",
                             size=14,
                         ),
-                        content="The current selected mode.",
+                        content=f"You are using {State.model} model",
                         variant="soft",
                     ),
                 ),
@@ -46,6 +50,21 @@ def navbar() -> rx.Component:
             rx.hstack(
                 rx.color_mode.icon(),
                 rx.color_mode.switch(),
+                rx.select.root(
+                    rx.select.trigger(),
+                    rx.select.content(
+                        rx.select.group(
+                            rx.select.label("Select a functionality"),
+                            *[rx.select.item(
+                                mode.title(),
+                                value=mode
+                            )
+                            for mode in modes],
+                        ),
+                    ),
+                    default_value=modes[0],
+                    on_change=State.set_mode,
+                ),
                 sidebar(
                     rx.button(
                         rx.icon(

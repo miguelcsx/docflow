@@ -3,8 +3,10 @@
 import reflex as rx
 from docflow.state import State
 from docflow.style.text_box_style import (
+    copy_style,
     text_box_style,
     formated_box_style,
+    scroll_formated_style
 )
 
 
@@ -20,13 +22,27 @@ def text_box() -> rx.Component:
 
 
 def formated_box() -> rx.Component:
-    return rx.box(
+    return rx.hstack(
         rx.scroll_area(
             rx.markdown(
                 State.documentation,
             ),
-            style=formated_box_style,
-        )
+            style=scroll_formated_style
+        ),
+        rx.button(
+            rx.icon(tag="copy", size=18, color=rx.color("mauve", 9)),
+            on_click=rx.set_clipboard(State.documentation),
+            background="transparent",
+            _hover = {
+                "opacity": 0.5,
+                "cursor": "pointer",
+                "background": "transparent",
+            },
+            _active = {
+                "size": "0.8em",
+                "transform": "scale(0.8)",
+            },
+            style = copy_style,
+        ),
+        style=formated_box_style,
     )
-
-

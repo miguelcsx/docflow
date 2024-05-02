@@ -1,10 +1,24 @@
 # docflow/state.py
 
+from enum import Enum
 import reflex as rx
 from docflow.models.google_ai import (
     test_api_token,
     generate_markdown,
+    generate_docstring,
 )
+
+
+class Mode(Enum):
+    MARKDOWN = "markdown",
+    DOCSTRING = "docstring"
+
+
+class Model(Enum):
+    # ANTHROPIC = "anthropic"
+    GEMINI = "gemini"
+    # OPENAI = "openai"
+
 
 class State(rx.State):
     """The app state."""
@@ -13,7 +27,10 @@ class State(rx.State):
     code: str = ""
 
     # Model input
-    model: str = ""
+    model: str = Model.GEMINI
+
+    # Output mode
+    mode: str = "markdown"
 
     # API token input
     token: str = ""
@@ -38,6 +55,9 @@ class State(rx.State):
     def set_model(self, model: str):
         """Set the model input."""
         self.model = model
+
+    def set_mode(self, mode: str):
+        self.mode = mode
 
     def set_token(self, token: str):
         """Set the API token input."""
@@ -68,6 +88,10 @@ class State(rx.State):
         self.processing = True
         yield
         
-        self.documentation = generate_markdown(self.token, self.code, self.prompt)
+        if self.mode == "markdown":
+            self.documentation = generate_markdown(self.token, self.code, self.prompt)
+        elif self.mode == "docstring":
+            self.documentation = generate_docstring(self.token, self.code, self.prompt)
+
 
         self.processing = False

@@ -6,7 +6,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 def test_api_token(token) -> bool:
     try:
         llm = ChatGoogleGenerativeAI(google_api_key=token, model="gemini-pro")
-        print(llm)
         llm.invoke("")
     except Exception:
         return False
@@ -21,7 +20,7 @@ def generate_markdown(token, text, instructions):
     )
 
     function_prompt_template: str = """
-    Generate markdown documentation for the given code and apply extra instructions.
+    Generate markdown documentation for the given code and apply extra instructions:
     code: {text}
     extra instructions: {instructions}
     """
@@ -29,6 +28,34 @@ def generate_markdown(token, text, instructions):
     prompt: str = PromptTemplate.from_template(template=function_prompt_template)
     prompt_formatted_str: str = prompt.format(
         text= text, instructions= instructions
+    )
+
+    result = llm.invoke(prompt_formatted_str)
+
+    return result.content
+
+
+def generate_docstring(token, text, instructions):
+    llm = ChatGoogleGenerativeAI(
+        google_api_key=token,
+        model="gemini-pro",
+        temperature=0,
+    )
+
+    function_prompt_template: str = """
+    Generate docstring documentation for the given code and apply extra instructions using the provided documentation style:
+    code: {text}
+    extra instructions: {instructions}
+    documentation style: {documentation_style}
+    """
+
+    documentation_style: str = 'Numpy-Style'
+
+    prompt: str = PromptTemplate.from_template(template=function_prompt_template)
+    prompt_formatted_str: str = prompt.format(
+        text= text,
+        instructions= instructions,
+        documentation_style= documentation_style,
     )
 
     result = llm.invoke(prompt_formatted_str)

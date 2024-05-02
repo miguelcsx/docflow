@@ -2,14 +2,12 @@
 
 import reflex as rx
 from enum import Enum
-from docflow.state import State
+from docflow.state import (
+    State,
+    Model
+)
 from docflow.components.loading_icon import loading_icon
 
-
-class Model(Enum):
-    # ANTHROPIC = "anthropic"
-    GEMINI = "gemini"
-    # OPENAI = "openai"
 
 def model_select() -> rx.Component:
     models = [model.value for model in Model]
@@ -33,7 +31,6 @@ def model_select() -> rx.Component:
                 ),
                 rx.input(
                     name="token",
-                    default_value=State.token,
                     value=State.token,
                     placeholder="Enter your API token here...",
                     on_change=State.set_token,
