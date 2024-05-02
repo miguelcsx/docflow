@@ -2,22 +2,11 @@
 
 from enum import Enum
 import reflex as rx
-from docflow.models.google_ai import (
+from docflow.models.llm import (
     test_api_token,
     generate_markdown,
     generate_docstring,
 )
-
-
-class Mode(Enum):
-    MARKDOWN = "markdown",
-    DOCSTRING = "docstring"
-
-
-class Model(Enum):
-    # ANTHROPIC = "anthropic"
-    GEMINI = "gemini"
-    # OPENAI = "openai"
 
 
 class State(rx.State):
@@ -27,7 +16,7 @@ class State(rx.State):
     code: str = ""
 
     # Model input
-    model: str = Model.GEMINI
+    model: str = "gemini"
 
     # Output mode
     mode: str = "markdown"
@@ -69,7 +58,7 @@ class State(rx.State):
     def handle_submit(self, settings_data: dict):
         self.loading = True
         yield
-        if not test_api_token(self.token):
+        if not test_api_token(self.token, self.model):
             self.loading = False
             print("Invalid api token")
             return
@@ -89,9 +78,9 @@ class State(rx.State):
         yield
         
         if self.mode == "markdown":
-            self.documentation = generate_markdown(self.token, self.code, self.prompt)
+            self.documentation = generate_markdown(self.token, self.model, self.code, self.prompt)
         elif self.mode == "docstring":
-            self.documentation = generate_docstring(self.token, self.code, self.prompt)
+            self.documentation = generate_docstring(self.token, self.model, self.code, self.prompt)
 
 
         self.processing = False

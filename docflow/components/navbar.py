@@ -2,10 +2,7 @@
 
 import reflex as rx
 from docflow.components.model_select import model_select
-from docflow.state import (
-    State,
-    Mode
-)
+from docflow.state import State
 from docflow.style.navbar_style import (
     navbar_style,
     sidebar_style,
