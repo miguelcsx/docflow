@@ -20,11 +20,22 @@ def values() -> rx.Component:
 def index() -> rx.Component:
     return rx.chakra.vstack(
         navbar.navbar(),
+        rx.tablet_and_desktop(
         rx.center(
             text_box.text_box(),
             text_box.formated_box(),
             style=document_style,
         ),
+        ),
+        rx.mobile_only(
+            rx.flex(
+                text_box.text_box(),
+                text_box.formated_box(),
+                width="100%",
+                direction="column",
+            )
+        ),
+          
         prompt_bar.prompt_bar(),
         style=index_style,
     )
