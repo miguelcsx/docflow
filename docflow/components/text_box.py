@@ -21,10 +21,12 @@ def text_box() -> rx.Component:
 
 def formated_box() -> rx.Component:
     return rx.box(
-        rx.markdown(
-            State.documentation,
+        rx.scroll_area(
+            rx.markdown(
+                State.documentation,
+            ),
             style=formated_box_style,
-        ),
+        )
     )
 
 

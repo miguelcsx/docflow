@@ -1,14 +1,15 @@
 # docflow/components/model_select.py
 
 import reflex as rx
-from docflow.state import State
 from enum import Enum
+from docflow.state import State
+from docflow.components.loading_icon import loading_icon
 
 
 class Model(Enum):
-    ANTHROPIC = "anthropic"
+    # ANTHROPIC = "anthropic"
     GEMINI = "gemini"
-    OPENAI = "openai"
+    # OPENAI = "openai"
 
 def model_select() -> rx.Component:
     models = [model.value for model in Model]
@@ -25,7 +26,7 @@ def model_select() -> rx.Component:
                                     value=model,
                                 ) 
                                 for model in models],
-                        )
+                        ),
                     ),
                     default_value=models[0].lower().replace(" ", ""),
                     name="model",
@@ -40,17 +41,15 @@ def model_select() -> rx.Component:
                     required=True,
                 ),
                 rx.button(
-                    "Submit",
+                    rx.cond(
+                        State.loading,
+                        loading_icon(height="1em"),
+                        rx.text("Submit"),
+                    ),
                     type="submit",
                 ),
             ),
             on_submit=State.handle_submit,
             reset_on_submit=True,
         ),
-        rx.divider(size="4"),
-        rx.heading("Results"),
-        rx.text(State.settings_data.to_string()),
-        width="100%",
-        direction="column",
-        spacing="2",
     )

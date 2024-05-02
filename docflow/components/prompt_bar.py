@@ -3,23 +3,7 @@
 import reflex as rx
 from docflow.state import State
 from docflow.style.prompt_bar_style import prompt_bar_style
-
-class LoadingIcon(rx.Component):
-    library = "react-loading-icons"
-    tag = "SpinningCircles"
-    stroke: rx.Var[str]
-    stroke_opacity: rx.Var[str]
-    fill: rx.Var[str]
-    fill_opacity: rx.Var[str]
-    stroke_width: rx.Var[str]
-    speed: rx.Var[str]
-    height: rx.Var[str]
-
-    def get_event_triggers(self) -> dict:
-        return {"on_change": lambda status: [status]}
-
-loading_icon = LoadingIcon.create
-
+from docflow.components.loading_icon import loading_icon
 
 def prompt_bar() -> rx.Component:
     return rx.center(
@@ -32,6 +16,7 @@ def prompt_bar() -> rx.Component:
                                 placeholder="Enter additional information... (optional)",
                                 id="prompt",
                                 width=["15em", "20em", "45em", "50em", "50em", "50em"],
+                                on_change=State.set_prompt,
                             ),
                             rx.radix.text_field.slot(
                                 rx.tooltip(
@@ -56,7 +41,6 @@ def prompt_bar() -> rx.Component:
                 on_submit=State.process_documentation,
                 reset_on_submit=True,
             ),
-            rx.text(State.form_data.to_string())
         ),
         style=prompt_bar_style,
     )

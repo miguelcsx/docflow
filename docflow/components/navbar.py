@@ -18,6 +18,7 @@ def sidebar(trigger) -> rx.Component:
                     rx.heading("DocFlow", color=rx.color("mauve", 11)),
                     rx.divider(),
                     model_select(),
+                    width = "80%",
                 ),
                 style= sidebar_style,
             )
@@ -43,6 +44,8 @@ def navbar() -> rx.Component:
                 align_items="center",
             ),
             rx.hstack(
+                rx.color_mode.icon(),
+                rx.color_mode.switch(),
                 sidebar(
                     rx.button(
                         rx.icon(

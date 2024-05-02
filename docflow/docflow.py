@@ -33,6 +33,9 @@ app = rx.App(
     theme=rx.theme(
         appearance="light",
         accent_color="indigo",
+        has_background=True,
+        radius="medium",
+        
     )
 )
 app.add_page(index)

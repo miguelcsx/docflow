@@ -3,7 +3,7 @@
 import reflex as rx
 
 prompt_bar_style = {
-    "position": "sticky",
+    "position": "fixed",
     "bottom": "0",
     "left": "0",
     "padding": "16px",

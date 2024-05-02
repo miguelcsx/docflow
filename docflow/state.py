@@ -1,6 +1,10 @@
 # docflow/state.py
 
 import reflex as rx
+from docflow.models.google_ai import (
+    test_api_token,
+    generate_markdown,
+)
 
 class State(rx.State):
     """The app state."""
@@ -14,11 +18,14 @@ class State(rx.State):
     # API token input
     token: str = ""
 
-    # Processing state
-    processing: bool = False
+    prompt: str = ""
 
     # Documentation output
     documentation: str = ""
+
+    # Processing state
+    loading: bool = False
+    processing: bool = False
 
     settings_data: dict = {}
 
@@ -36,11 +43,31 @@ class State(rx.State):
         """Set the API token input."""
         self.token = token
 
-    def handle_submit(self, form_data: dict):
-        self.settings_data = form_data
+    def set_prompt(self, prompt: str):
+        self.prompt = prompt
 
-    async def process_documentation(self, form_data: dict[str, str]):
-        form_data["code"] = self.code
+    def handle_submit(self, settings_data: dict):
+        self.loading = True
+        yield
+        if not test_api_token(self.token):
+            self.loading = False
+            print("Invalid api token")
+            return
+        self.settings_data = settings_data
+        self.loading = False
+
+    def process_documentation(self, form_data: dict[str, str]):
         self.form_data = form_data
-        self.documentation = form_data["code"] + form_data["prompt"]
         
+        if self.settings_data['token'] == "":
+            return
+        
+        if self.code == "":
+            return
+        
+        self.processing = True
+        yield
+        
+        self.documentation = generate_markdown(self.token, self.code, self.prompt)
+
+        self.processing = False
